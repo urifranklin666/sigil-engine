@@ -1,21 +1,31 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { downloadPng, forge, paintCanvas, type ForgeResult } from "../../engine";
+import {
+  buildStencilSvg,
+  downloadPng,
+  downloadText,
+  forge,
+  paintCanvas,
+  type ForgeResult,
+  type SigilMode,
+} from "../../engine";
 
 type Props = {
   initial?: string;
+  mode?: SigilMode;
   onForge?: (result: ForgeResult) => void;
   showExport?: boolean;
 };
 
 export function SigilLive({
   initial = "SHIP IT ON TIME",
+  mode = "forge",
   onForge,
   showExport = true,
 }: Props) {
   const [intent, setIntent] = useState(initial);
-  const [result, setResult] = useState<ForgeResult>(() => forge(initial));
+  const [result, setResult] = useState<ForgeResult>(() => forge(initial, mode));
   const ref = useRef<HTMLCanvasElement>(null);
   const onForgeRef = useRef(onForge);
   onForgeRef.current = onForge;
@@ -25,7 +35,7 @@ export function SigilLive({
     if (!canvas) return;
 
     const paint = () => {
-      const next = paintCanvas(canvas, intent);
+      const next = paintCanvas(canvas, intent, { mode });
       setResult(next);
       onForgeRef.current?.(next);
     };
@@ -35,20 +45,28 @@ export function SigilLive({
     const ro = new ResizeObserver(() => paint());
     ro.observe(canvas);
     return () => ro.disconnect();
-  }, [intent]);
+  }, [intent, mode]);
+
+  const slug =
+    result.letters.join("").toLowerCase() || result.seedHex.slice(0, 8);
 
   const exportPng = () => {
     const canvas = ref.current;
     if (!canvas) return;
-    const slug =
-      result.letters.join("").toLowerCase() || result.seedHex.slice(0, 8);
-    downloadPng(canvas, `sigil-${slug}.png`);
+    downloadPng(canvas, `sigil-${mode}-${slug}.png`);
+  };
+
+  const exportStencil = () => {
+    const svg = buildStencilSvg(result);
+    downloadText(svg, `sigil-${mode}-${slug}-stencil.svg`);
   };
 
   return (
     <div className="sigil-live">
       <div className="panel-head">
-        <span className="eyebrow live">Live · deterministic</span>
+        <span className="eyebrow live">
+          Live · {mode === "chaos" ? "chaos wheel" : "deterministic"}
+        </span>
         <span className="eyebrow faint">canvas 2d</span>
       </div>
       <canvas ref={ref} aria-label={`Sigil for: ${intent}`} role="img" />
@@ -62,9 +80,18 @@ export function SigilLive({
           spellCheck={false}
         />
         {showExport ? (
-          <button type="button" className="sigil-export" onClick={exportPng}>
-            Export PNG
-          </button>
+          <div className="sigil-exports">
+            <button type="button" className="sigil-export" onClick={exportPng}>
+              Export PNG
+            </button>
+            <button
+              type="button"
+              className="sigil-export"
+              onClick={exportStencil}
+            >
+              Stencil SVG
+            </button>
+          </div>
         ) : null}
       </div>
     </div>
