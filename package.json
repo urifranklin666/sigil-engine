@@ -1,0 +1,30 @@
+{
+  "name": "sigil-engine",
+  "version": "0.2.0",
+  "private": true,
+  "description": "Deterministic sigil generator — FNV-1a seeded, three-ring wheel. Extracted from deadplug-web.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -p tsconfig.json --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "exports": {
+    ".": "./src/engine/index.ts",
+    "./react": "./src/components/sigil/SigilLive.tsx"
+  },
+  "dependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.3",
+    "vitest": "^3.0.5"
+  }
+}

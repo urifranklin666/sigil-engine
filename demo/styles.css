@@ -1,0 +1,297 @@
+:root {
+  --bg: #070708;
+  --panel: #0e0e10;
+  --line: #1c1d22;
+  --ink: #e8e6e1;
+  --mute: #5f5e5a;
+  --faint: #3a3936;
+  --blood: #e8202a;
+  --ring: #2a2d35;
+  --font-display: "IBM Plex Sans", "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", "SFMono-Regular", ui-monospace, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  color: var(--ink);
+  background:
+    radial-gradient(1200px 600px at 70% -10%, #1a0a0c 0%, transparent 55%),
+    radial-gradient(900px 500px at 0% 100%, #101218 0%, transparent 50%),
+    var(--bg);
+  font-family: var(--font-display);
+}
+
+.app {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 1.5rem clamp(1rem, 3vw, 2rem) 3rem;
+}
+
+.brand {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.75rem 1.25rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 1rem;
+}
+
+.brand-mark {
+  margin: 0;
+  letter-spacing: 0.28em;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--blood);
+}
+
+.brand-sub {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--mute);
+}
+
+.stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  gap: 1.25rem;
+}
+
+@media (max-width: 860px) {
+  .stage {
+    grid-template-columns: 1fr;
+  }
+}
+
+.forge-panel,
+.canvas-panel {
+  background: color-mix(in srgb, var(--panel) 92%, black);
+  border: 1px solid var(--line);
+  min-height: 520px;
+}
+
+.forge-panel {
+  padding: 1rem 1.1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.tabs {
+  display: flex;
+  gap: 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+}
+
+.tab.active {
+  color: var(--blood);
+  border-bottom: 1px solid var(--blood);
+  padding-bottom: 0.2rem;
+}
+
+.tab.muted {
+  color: var(--faint);
+}
+
+.intent-echo {
+  margin: 0;
+  font-size: clamp(1.15rem, 2.4vw, 1.55rem);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  line-height: 1.25;
+  text-wrap: balance;
+}
+
+.terminal {
+  list-style: none;
+  margin: 0;
+  padding: 0.85rem 0.9rem;
+  background: #050506;
+  border: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  line-height: 1.7;
+  color: #9a9892;
+}
+
+.terminal li {
+  display: grid;
+  grid-template-columns: auto auto 1fr auto;
+  gap: 0.45rem;
+  align-items: baseline;
+}
+
+.terminal .prompt {
+  color: var(--blood);
+}
+
+.terminal .label {
+  color: #c4c1b8;
+}
+
+.terminal .dots {
+  border-bottom: 1px dotted #2c2b28;
+  min-width: 1rem;
+  transform: translateY(-0.2em);
+}
+
+.terminal .detail {
+  color: var(--mute);
+  text-align: right;
+}
+
+.method {
+  margin-top: auto;
+}
+
+.method-title {
+  margin: 0 0 0.55rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  color: var(--mute);
+}
+
+.method ol {
+  margin: 0;
+  padding-left: 1.1rem;
+  color: #b7b4ab;
+  font-size: 0.86rem;
+  line-height: 1.55;
+}
+
+.method strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.disclaimer {
+  margin: 0.9rem 0 0;
+  font-size: 0.72rem;
+  color: var(--faint);
+  line-height: 1.45;
+}
+
+.canvas-panel {
+  display: flex;
+  flex-direction: column;
+  padding: 0.75rem;
+}
+
+.sigil-live {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  gap: 0.65rem;
+}
+
+.panel-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 0.15rem;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+}
+
+.eyebrow.live {
+  color: var(--blood);
+}
+
+.eyebrow.faint {
+  color: var(--faint);
+}
+
+.sigil-live canvas {
+  width: 100%;
+  flex: 1;
+  min-height: 360px;
+  background:
+    radial-gradient(circle at center, #121317 0%, #0a0a0b 70%),
+    var(--bg);
+  border: 1px solid var(--line);
+}
+
+.sigil-in {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.5rem;
+}
+
+.sigil-in input {
+  width: 100%;
+  border: 1px solid var(--ring);
+  background: #050506;
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  padding: 0.7rem 0.8rem;
+  outline: none;
+}
+
+.sigil-in input:focus {
+  border-color: color-mix(in srgb, var(--blood) 55%, var(--ring));
+}
+
+.sigil-export {
+  border: 1px solid var(--ring);
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  padding: 0 0.9rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.sigil-export:hover {
+  border-color: var(--blood);
+  color: var(--blood);
+}
+
+.meters {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  padding: 0.55rem 0.2rem 0.15rem;
+  border-top: 1px solid var(--line);
+  font-family: var(--font-mono);
+}
+
+.meters div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.meters span {
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  color: var(--faint);
+}
+
+.meters strong {
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--ink);
+}
