@@ -27,7 +27,10 @@ export function drawSigil(
   const R = Math.min(w, h) * 0.42;
   const geo = layout(forged.letters, forged.seed, cx, cy, R);
 
-  if (clear) ctx.clearRect(0, 0, w, h);
+  if (clear) {
+    ctx.fillStyle = COLORS.bg;
+    ctx.fillRect(0, 0, w, h);
+  }
 
   ctx.strokeStyle = COLORS.ring;
   ctx.lineWidth = 1;
