@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { fnv1a, forge, layout, reduce, rng } from "./core";
+import { buildStencilSvg, stencilFromIntent } from "./stencil";
 
 describe("reduce", () => {
   it("strips vowels and collapses duplicates", () => {
@@ -54,6 +55,14 @@ describe("forge", () => {
     expect(steps[0]?.label).toBe("parsing intent");
     expect(steps.some((s) => s.label.includes("59CF7291"))).toBe(true);
   });
+
+  it("chaos mode keeps the same charge hex with different steps", () => {
+    const f = forge("NOTHING HERE WORKS ALONE", "forge");
+    const c = forge("NOTHING HERE WORKS ALONE", "chaos");
+    expect(c.seed).toBe(f.seed);
+    expect(c.mode).toBe("chaos");
+    expect(c.steps.some((s) => s.label.includes("scrambling"))).toBe(true);
+  });
 });
 
 describe("rng + layout", () => {
@@ -63,12 +72,41 @@ describe("rng + layout", () => {
     expect([a(), a(), a()]).toEqual([b(), b(), b()]);
   });
 
-  it("layout is deterministic for fixed geometry inputs", () => {
+  it("forge layout is deterministic for fixed geometry inputs", () => {
     const letters = reduce("SHIP IT ON TIME").letters;
     const seed = fnv1a("ship it on time");
-    const a = layout(letters, seed, 160, 160, 100);
-    const b = layout(letters, seed, 160, 160, 100);
+    const a = layout(letters, seed, 160, 160, 100, "forge");
+    const b = layout(letters, seed, 160, 160, 100, "forge");
     expect(a.points).toEqual(b.points);
     expect(a.controls).toEqual(b.controls);
+    expect(a.closed).toBe(false);
+  });
+
+  it("chaos layout is closed, deterministic, and distinct from forge", () => {
+    const letters = reduce("SHIP IT ON TIME").letters;
+    const seed = fnv1a("ship it on time");
+    const a = layout(letters, seed, 160, 160, 100, "chaos");
+    const b = layout(letters, seed, 160, 160, 100, "chaos");
+    const forgeGeo = layout(letters, seed, 160, 160, 100, "forge");
+    expect(a.points).toEqual(b.points);
+    expect(a.closed).toBe(true);
+    expect(a.chords.length).toBeGreaterThan(0);
+    expect(a.points).not.toEqual(forgeGeo.points);
+  });
+});
+
+describe("stencil svg", () => {
+  it("emits a black stroke SVG for forge and chaos", () => {
+    const { svg, forged } = stencilFromIntent("SHIP IT ON TIME", "forge");
+    expect(forged.seedHex).toBe("ec33b16a");
+    expect(svg).toContain("<svg");
+    expect(svg).toContain('stroke="#000"');
+    expect(svg).toContain("<path");
+    expect(svg).not.toContain("fill=\"#");
+  });
+
+  it("is stable for a given intent/mode", () => {
+    const forged = forge("NOTHING HERE WORKS ALONE", "chaos");
+    expect(buildStencilSvg(forged)).toBe(buildStencilSvg(forged));
   });
 });

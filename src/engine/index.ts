@@ -8,6 +8,8 @@ export {
   type ForgeStep,
   type Point,
   type Layout,
+  type Chord,
+  type SigilMode,
 } from "./core";
 
 export {
@@ -15,5 +17,12 @@ export {
   drawSigil,
   paintCanvas,
   downloadPng,
+  downloadText,
   type DrawOptions,
 } from "./draw";
+
+export {
+  buildStencilSvg,
+  stencilFromIntent,
+  type StencilOptions,
+} from "./stencil";
