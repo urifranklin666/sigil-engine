@@ -76,3 +76,13 @@ canvas {
   filter: drop-shadow(0 0 16px rgba(255,30,30,.45)) !important;
   background: #040205;
 }
+
+/* ---- forged grimoire ---- */
+.grimoire-item{display:flex;flex-direction:column;gap:.35rem;padding:0;background:none;border:0;cursor:pointer;color:#b9aaa4;font:.62rem/1.2 'JetBrains Mono',monospace;letter-spacing:.04em;text-transform:uppercase;text-align:center;min-width:0}
+.grimoire-item img{display:block;aspect-ratio:1}
+.grimoire-item span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.grimoire-item:hover span,.grimoire-item:focus-visible span{color:var(--ember)}
+.grimoire-item:focus-visible{outline:1px solid var(--ember);outline-offset:3px}
+.grimoire-empty{grid-column:1/-1;color:#8a7a75;font:italic 1rem Georgia,serif;margin:0 0 .5rem}
+#clear{margin-top:1rem}
+#clear:disabled{opacity:.4;cursor:not-allowed}

@@ -787,6 +787,7 @@ document.getElementById('phrase').addEventListener('input', (e) => {
 
 document.getElementById('gen').addEventListener('click', () => {
   render();
+  addToGrimoire();
   notify('SIGIL FORGED FROM VOID');
 });
 
@@ -796,6 +797,7 @@ document.getElementById('surprise').addEventListener('click', () => {
   currentPhrase = chosen;
   updateCount();
   render();
+  addToGrimoire();
   notify(`SUMMONED SEED: ${chosen}`);
 });
 
@@ -902,6 +904,105 @@ document.getElementById('share').addEventListener('click', () => {
   notify('RITUAL LINK COPIED');
 });
 
+
+// ---- Forged Grimoire: a local gallery of forged sigils ----
+const GRIMOIRE_KEY = 'infernal-grimoire-v1';
+const GRIMOIRE_MAX = 24;
+
+function loadGrimoire(){
+  try { const v = JSON.parse(localStorage.getItem(GRIMOIRE_KEY)); return Array.isArray(v) ? v : []; }
+  catch(e){ return []; }
+}
+function saveGrimoire(list){
+  while(list.length){
+    try { localStorage.setItem(GRIMOIRE_KEY, JSON.stringify(list)); return true; }
+    catch(e){ list.pop(); } // storage full: drop the oldest and retry
+  }
+  try { localStorage.removeItem(GRIMOIRE_KEY); } catch(e){}
+  return false;
+}
+
+function grimoireKey(e){
+  return [e.phrase, e.type, e.hue, e.sat, e.light, e.glow, e.inverted, e.outerRings].join('|');
+}
+
+function addToGrimoire(){
+  const thumb = document.createElement('canvas');
+  thumb.width = thumb.height = 180;
+  thumb.getContext('2d').drawImage(canvas, 0, 0, 180, 180);
+  const entry = {
+    phrase: currentPhrase, type: sigilType,
+    hue, sat, light, glow, inverted, outerRings,
+    hash: hashEl.textContent,
+    img: thumb.toDataURL('image/jpeg', 0.85),
+    at: Date.now()
+  };
+  const key = grimoireKey(entry);
+  const list = loadGrimoire().filter(e => grimoireKey(e) !== key);
+  list.unshift(entry);
+  saveGrimoire(list.slice(0, GRIMOIRE_MAX));
+  renderGrimoire();
+}
+
+function syncControls(){
+  [['hue', hue], ['sat', sat], ['light', light], ['glow', glow]].forEach(([id, v]) => {
+    document.getElementById(id).value = v;
+    document.getElementById(id + 'Val').textContent = v;
+  });
+  document.getElementById('invert').setAttribute('aria-pressed', String(inverted));
+  document.getElementById('outerRings').setAttribute('aria-pressed', String(outerRings));
+  typeBtns.forEach(b => b.classList.toggle('active', b.dataset.type === sigilType));
+}
+
+function restoreFromGrimoire(e){
+  currentPhrase = e.phrase || 'deadplug';
+  phraseEl.value = e.phrase || '';
+  sigilType = e.type || 'infernal';
+  hue = e.hue; sat = e.sat; light = e.light; glow = e.glow;
+  inverted = !!e.inverted; outerRings = e.outerRings !== false;
+  updateCount();
+  syncControls();
+  render();
+  canvas.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  notify(`RESURRECTED: ${currentPhrase.toUpperCase()}`);
+}
+
+function renderGrimoire(){
+  const list = loadGrimoire();
+  grid.replaceChildren();
+  document.getElementById('clear').disabled = list.length === 0;
+  if(!list.length){
+    const empty = document.createElement('p');
+    empty.className = 'grimoire-empty';
+    empty.textContent = 'The grimoire is empty. Forge or summon a sigil to bind it here.';
+    grid.appendChild(empty);
+    return;
+  }
+  list.forEach(e => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'grimoire-item';
+    const label = `${e.phrase} — ${e.type}`;
+    b.title = `${label} (${e.hash})`;
+    b.setAttribute('aria-label', `Restore sigil: ${label}`);
+    const img = document.createElement('img');
+    img.src = e.img; img.alt = ''; img.loading = 'lazy';
+    const cap = document.createElement('span');
+    cap.textContent = e.phrase;
+    b.append(img, cap);
+    b.addEventListener('click', () => restoreFromGrimoire(e));
+    grid.appendChild(b);
+  });
+}
+
+document.getElementById('clear').addEventListener('click', () => {
+  if(!loadGrimoire().length) return;
+  if(!confirm('Erase every sigil in the grimoire? This cannot be undone.')) return;
+  try { localStorage.removeItem(GRIMOIRE_KEY); } catch(e){}
+  renderGrimoire();
+  notify('GRIMOIRE ERASED');
+});
+
 // Init on load
 const urlParams = new URLSearchParams(window.location.search);
 if(urlParams.get('seed')){
@@ -915,3 +1016,4 @@ if(urlParams.get('type') && ['infernal','goetic','bloodrunes','abyssal','blackbl
 
 updateCount();
 render();
+renderGrimoire();
