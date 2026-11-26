@@ -1,5 +1,13 @@
 # Sigil Engine
 
+Two tools, one repo, both live on deadplug.digital:
+
+- **Infernal** (`infernal/`, vanilla JS) at https://deadplug.digital/sigil/ — five ritual styles, palettes, rotating rings, PNG/SVG export, share links, grimoire. This is the product.
+- **The Wheel** (`src/` + `demo/`, React/Vite, this package) at https://deadplug.digital/sigil/forge/ — the classic three-ring engine from deadplug-web, as a tested library and a live forge.
+
+Deploy both with `./deploy/sigil-deploy` (tests, builds with base `/sigil/forge/`, rsyncs into /srv/www/deadplug-apps/sigil, mirrors into the deadplug-apps repo). Fonts come from the network's signal bundle because the hub CSP does not allow Google Fonts.
+
+
 Faithful port of the legacy sigil engine from deadplug-web. Reduce intent (vowels out, duplicates out), seed FNV-1a from the lowercased intent, bind survivors across a three-ring wheel. **Same intent, same sigil, forever.**
 
 ## Pipeline

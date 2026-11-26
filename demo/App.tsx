@@ -16,7 +16,8 @@ export function App() {
     <div className="app">
       <header className="brand">
         <p className="brand-mark">SIGIL ENGINE</p>
-        <p className="brand-sub">deadplug extract · deterministic · forever</p>
+        <p className="brand-sub">the wheel · deterministic · forever</p>
+        <a className="brand-link" href="/sigil/">Infernal build ↗</a>
       </header>
 
       <main className="stage">

@@ -7,8 +7,8 @@
   --faint: #3a3936;
   --blood: #e8202a;
   --ring: #2a2d35;
-  --font-display: "IBM Plex Sans", "Segoe UI", sans-serif;
-  --font-mono: "IBM Plex Mono", "SFMono-Regular", ui-monospace, monospace;
+  --font-display: "Archivo", "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", "SFMono-Regular", ui-monospace, monospace;
 }
 
 * {
@@ -295,3 +295,10 @@ body {
   font-weight: 500;
   color: var(--ink);
 }
+
+/* room for the CH 404 network bar + hub nav */
+.app { padding-top: 72px; }
+@media (max-width: 800px) { .app { padding-top: 56px; } }
+.brand { display: flex; align-items: baseline; gap: 18px; flex-wrap: wrap; }
+.brand-link { margin-left: auto; font-family: var(--font-mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--mute); text-decoration: none; border: 1px solid var(--line); padding: 6px 10px; }
+.brand-link:hover { color: var(--blood); border-color: var(--blood); }

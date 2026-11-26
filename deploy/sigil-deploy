@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# deploy/sigil-deploy — build the wheel (React, base /sigil/forge/) and publish both tools to
+# /srv/www/deadplug-apps/sigil (served by the hub vhost), then mirror into the deadplug-apps repo.
+set -euo pipefail
+HERE=$(cd "$(dirname "$0")/.." && pwd)
+cd "$HERE"
+npm test --silent >/dev/null
+npm run build --silent >/dev/null
+STAGE=$(mktemp -d /tmp/sigil-stage.XXXXXX); trap 'rm -rf "$STAGE"' EXIT
+cp infernal/index.html infernal/sigil.js infernal/styles.css "$STAGE/"
+mkdir -p "$STAGE/forge" && cp -r dist/. "$STAGE/forge/"
+sudo rsync -a --delete --chown=www-data:www-data "$STAGE/" /srv/www/deadplug-apps/sigil/
+MIRROR=$HOME/projects/deadplug-apps/sigil
+if [[ -d $MIRROR ]]; then rsync -a --delete "$STAGE/" "$MIRROR/"; fi
+for p in /sigil/ /sigil/forge/; do
+  code=$(curl -s -o /dev/null -w '%{http_code}' "https://deadplug.digital$p"); [[ $code == 200 ]] || { echo "GATE FAILED: $p -> $code" >&2; exit 1; }
+done
+echo "ok: https://deadplug.digital/sigil/ (infernal) + https://deadplug.digital/sigil/forge/ (the wheel)"

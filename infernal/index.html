@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sigil Engine // Occult Geometry — deadplug.digital</title>
+<link rel="stylesheet" href="styles.css?v=20261112-infernal">
+<link rel="stylesheet" href="/studio-tools.css?v=20261114b"><link rel="stylesheet" href="https://deadplug.digital/signal/v1/signal.css?v=1.0.0">
+<script src="https://deadplug.digital/signal/v1/signal.js?v=1.0.0" data-sg-channel="hub" data-sg-hubnav="1" defer></script><link rel="icon" href="/identity.svg" type="image/svg+xml"></head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brandline">
+      <h1 class="logo">SIGIL<span>ENGINE</span></h1>
+      <span class="live-dot">DEMONIC PROTOCOL</span>
+      <a class="btn quiet" href="/sigil/forge/" style="margin-left:auto">The Wheel (classic) ↗</a>
+    </div>
+    <p class="tag">Deterministic occult marks forged from seed intent. Razor-sharp angular lines. Zero curves. Three counter-rotating rings of desecration.</p>
+  </header>
+
+  <div class="controls">
+    <label class="phrase-field">
+      <span>Seed phrase / Intent <b id="phraseCount">0</b>/96</span>
+      <input id="phrase" maxlength="96" type="text" placeholder="enter demon name, intent, or desecration..." autocomplete="off">
+    </label>
+    <div class="btnrow">
+      <button id="gen" class="btn primary">Forge Sigil</button>
+      <button id="surprise" class="btn">Summon Random</button>
+      <button id="randomize" class="btn">Blood / Void Palette</button>
+      <button id="reset" class="btn quiet">Purge</button>
+    </div>
+
+    <div class="typerow">
+      <span class="lbl">Ritual Style:</span>
+      <button class="typebtn active" data-type="infernal">Infernal</button>
+      <button class="typebtn" data-type="goetic">Goetic Seal</button>
+      <button class="typebtn" data-type="bloodrunes">Blood Runes</button>
+      <button class="typebtn" data-type="abyssal">Abyssal Star</button>
+      <button class="typebtn" data-type="blackblade">Black Blade</button>
+    </div>
+
+    <div class="sliders">
+      <label>Hue <input id="hue" type="range" min="0" max="360" value="356"><span id="hueVal">356</span></label>
+      <label>Sat <input id="sat" type="range" min="0" max="100" value="100"><span id="satVal">100</span></label>
+      <label>Light <input id="light" type="range" min="0" max="100" value="55"><span id="lightVal">55</span></label>
+      <label>Glow <input id="glow" type="range" min="0" max="30" value="14"><span id="glowVal">14</span></label>
+    </div>
+
+    <div class="toggles">
+      <button id="animate" class="btn active-toggle" aria-pressed="true">Rotating Rings: ON</button>
+      <button id="invert" class="btn" aria-pressed="false">Invert Abyss</button>
+      <button id="outerRings" class="btn" aria-pressed="true">Runic Borders</button>
+    </div>
+  </div>
+
+  <div class="stage-head">
+    <span>Ritual mark preview</span>
+    <span id="markStatus">Rings in Motion // 666 Hz</span>
+  </div>
+  <div class="stage">
+    <canvas id="canvas" width="960" height="960"></canvas>
+  </div>
+
+  <div class="actions">
+    <button id="dl512" class="btn">PNG 512</button>
+    <button id="dl1024" class="btn">PNG 1024</button>
+    <button id="dl2048" class="btn">PNG 2048</button>
+    <button id="svg" class="btn">Raw Vector SVG</button>
+    <button id="copy" class="btn">Copy Image</button>
+    <button id="share" class="btn">Share Ritual Link</button>
+  </div>
+
+  <div class="hashbox">
+    <span class="lbl">FNV-1A INVOCATION HASH:</span>
+    <code id="hash">—</code>
+    <button id="copyHash" class="text-btn">Copy Hash</button>
+  </div>
+
+  <div class="history">
+    <h2>Forged Grimoire</h2>
+    <div id="grid" class="grid"></div>
+    <button id="clear" class="btn">Erase Grimoire</button>
+  </div>
+</div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script src="sigil.js?v=20261112-infernal"></script>
+</body>
+</html>
